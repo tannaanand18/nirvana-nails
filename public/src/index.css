@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Luxurious Purple, Black & Gold Theme */
+    --background: 270 15% 5%;
+    --foreground: 45 100% 95%;
+
+    --card: 270 20% 8%;
+    --card-foreground: 45 100% 95%;
+
+    --popover: 270 20% 8%;
+    --popover-foreground: 45 100% 95%;
+
+    --primary: 280 60% 45%;
+    --primary-foreground: 45 100% 95%;
+    --primary-glow: 280 80% 60%;
+
+    --secondary: 270 15% 12%;
+    --secondary-foreground: 45 100% 95%;
+
+    --muted: 270 15% 15%;
+    --muted-foreground: 270 10% 60%;
+
+    --accent: 45 100% 50%;
+    --accent-foreground: 270 15% 5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 280 30% 20%;
+    --input: 270 20% 15%;
+    --ring: 280 60% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --gold: 45 100% 50%;
+    --gold-dark: 45 80% 40%;
+    --purple-deep: 280 60% 30%;
+    --purple-light: 280 60% 65%;
+    --purple-glow: 280 100% 70%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(280 60% 30%) 0%, hsl(270 15% 5%) 50%, hsl(45 80% 25%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(270 20% 10%) 0%, hsl(270 20% 6%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(45 80% 40%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(280 60% 45%) 0%, hsl(280 60% 65%) 100%);
+    --gradient-text: linear-gradient(135deg, hsl(45 100% 70%) 0%, hsl(45 100% 50%) 50%, hsl(280 60% 65%) 100%);
+
+    /* Shadows */
+    --shadow-glow: 0 0 60px hsl(280 60% 45% / 0.4);
+    --shadow-gold: 0 0 40px hsl(45 100% 50% / 0.3);
+    --shadow-card: 0 25px 50px -12px hsl(270 15% 0% / 0.5);
+
+    /* Sidebar */
+    --sidebar-background: 270 20% 8%;
+    --sidebar-foreground: 45 100% 95%;
+    --sidebar-primary: 280 60% 45%;
+    --sidebar-primary-foreground: 45 100% 95%;
+    --sidebar-accent: 270 15% 15%;
+    --sidebar-accent-foreground: 45 100% 95%;
+    --sidebar-border: 280 30% 20%;
+    --sidebar-ring: 280 60% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .font-body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .glass {
+    background: hsl(270 20% 8% / 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(280 30% 25% / 0.3);
+  }
+
+  .gold-border {
+    border: 1px solid hsl(45 100% 50% / 0.3);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px hsl(280 60% 45% / 0.4); }
+  50% { box-shadow: 0 0 40px hsl(280 60% 45% / 0.7); }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
