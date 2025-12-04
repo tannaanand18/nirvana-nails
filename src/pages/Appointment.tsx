@@ -54,7 +54,7 @@ const Appointment = () => {
         window.location.href = "/dashboard";
       }, 2000);
     } catch (error) {
-      alert("Something went wrong ❌");
+      alert("❌ Something went wrong");
     }
 
     setLoading(false);
@@ -65,11 +65,9 @@ const Appointment = () => {
       <Navbar />
 
       <section className="pt-32 pb-12 container mx-auto px-4">
-        <h1 className="font-display text-4xl font-bold mb-4">
-          Book Appointment
-        </h1>
+        <h1 className="font-display text-4xl font-bold mb-4">Book Appointment</h1>
 
-        <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
+        <form onSubmit={handleSubmit} className="max-w-lg space-y-4 mx-auto">
           <input
             disabled
             className="w-full border rounded px-3 py-2 bg-muted"
@@ -116,16 +114,16 @@ const Appointment = () => {
           />
 
           {/* Visibility Messages */}
-          {success && (
-            <p className="text-green-600 font-medium border border-green-400 rounded-md p-2 bg-green-50">
-              ✔ Appointment request sent! Redirecting to dashboard…
-            </p>
+          {loading && (
+            <div className="text-center border border-yellow-400 bg-yellow-50 text-yellow-700 font-semibold py-3 rounded-md animate-pulse">
+              ⏳ Submitting your appointment request…
+            </div>
           )}
 
-          {loading && (
-            <p className="text-yellow-600 font-medium border border-yellow-400 rounded-md p-2 bg-yellow-50 animate-pulse">
-              ⏳ Sending request…
-            </p>
+          {success && (
+            <div className="text-center border border-green-500 bg-green-50 text-green-700 font-semibold py-3 rounded-md">
+              ✔ Appointment request submitted successfully! Redirecting…
+            </div>
           )}
 
           <Button variant="gold" type="submit" className="w-full" disabled={loading}>
