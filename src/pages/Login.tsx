@@ -29,7 +29,7 @@ const Login = () => {
         </h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
-            className="w-full border rounded px-3 py-2"
+            className="w-full rounded-md border border-border bg-card px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -37,7 +37,7 @@ const Login = () => {
           />
           <input
             type="password"
-            className="w-full border rounded px-3 py-2"
+            className="w-full rounded-md border border-border bg-card px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
