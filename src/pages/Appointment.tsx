@@ -12,122 +12,116 @@ const Appointment = () => {
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((u) => {
       if (!u) {
         alert("Please login first");
         window.location.href = "/login";
+      } else {
+        setUser(u);
       }
-      setUser(u);
     });
     return () => unsub();
   }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
-    setSuccess(false);
+    await addDoc(collection(db, "appointments"), {
+      name: user.displayName || user.email,
+      email: user.email,
+      service: selectedService,
+      date,
+      time,
+      notes,
+      createdAt: Timestamp.now(),
+      status: "Pending",
+      userId: user.uid,
+    });
 
-    try {
-      await addDoc(collection(db, "appointments"), {
-        name: user.displayName || user.email,
-        email: user.email,
-        service: selectedService,
-        date,
-        time,
-        notes,
-        createdAt: Timestamp.now(),
-        status: "Pending",
-        userId: user.uid,
-      });
-
-      setSuccess(true);
-      setSelectedService("");
-      setDate("");
-      setTime("");
-      setNotes("");
-
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 2000);
-    } catch (error) {
-      alert("❌ Something went wrong");
-    }
-
-    setLoading(false);
+    alert("Appointment request submitted successfully 🥰");
+    window.location.href = "/dashboard";
   };
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      <section className="pt-32 pb-12 container mx-auto px-4">
-        <h1 className="font-display text-4xl font-bold mb-4">Book Appointment</h1>
+      <section className="pt-32 pb-20 container mx-auto px-4">
+        <h1 className="font-display text-4xl font-bold mb-8 text-center">
+          Book Appointment
+        </h1>
 
-        <form onSubmit={handleSubmit} className="max-w-lg space-y-4 mx-auto">
-          <input
-            disabled
-            className="w-full border rounded px-3 py-2 bg-muted"
-            value={user?.email || ""}
-          />
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-xl mx-auto space-y-5 bg-card/30 backdrop-blur-md p-8 rounded-2xl border border-gold/20 shadow-lg"
+        >
+          {/* Email field */}
+          <div>
+            <label className="text-sm font-medium mb-1 block">Email</label>
+            <input
+              disabled
+              className="w-full border rounded-lg px-4 py-3 bg-muted text-muted-foreground"
+              value={user?.email || ""}
+            />
+          </div>
 
-          <select
-            className="w-full border rounded px-3 py-2"
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            required
-          >
-            <option value="">Select Service</option>
-            <option value="Gel Polish">Gel Polish</option>
-            <option value="Nail Extensions">Nail Extensions</option>
-            <option value="Nail Art">Nail Art</option>
-            <option value="Press On Nails">Press On Nails</option>
-            <option value="Combo Package">Combo Package</option>
-            <option value="Bridal Nails">Bridal Nails</option>
-          </select>
+          {/* Select Service */}
+          <div>
+            <label className="text-sm font-medium mb-1 block">Select Service*</label>
+            <select
+              className="w-full border rounded-lg px-4 py-3 bg-background"
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              required
+            >
+              <option value="">-- Choose a service --</option>
+              <option value="Gel Polish">Gel Polish</option>
+              <option value="Nail Extensions">Nail Extensions</option>
+              <option value="Nail Art">Nail Art</option>
+              <option value="Press On Nails">Press On Nails</option>
+              <option value="Combo Package">Combo Package</option>
+              <option value="Bridal Nails">Bridal Nails</option>
+            </select>
+          </div>
 
-          <input
-            type="date"
-            className="w-full border rounded px-3 py-2"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+          {/* Date field */}
+          <div>
+            <label className="text-sm font-medium mb-1 block">Date*</label>
+            <input
+              type="date"
+              className="w-full border rounded-lg px-4 py-3 bg-background"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
 
-          <input
-            type="time"
-            className="w-full border rounded px-3 py-2"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
+          {/* Time field */}
+          <div>
+            <label className="text-sm font-medium mb-1 block">Time*</label>
+            <input
+              type="time"
+              className="w-full border rounded-lg px-4 py-3 bg-background"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              required
+            />
+          </div>
 
-          <textarea
-            className="w-full border rounded px-3 py-2"
-            placeholder="Notes (optional)"
-            rows={3}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
+          {/* Notes */}
+          <div>
+            <label className="text-sm font-medium mb-1 block">Notes (optional)</label>
+            <textarea
+              className="w-full border rounded-lg px-4 py-3 bg-background resize-none"
+              placeholder="Describe your preferred design / color / reference etc."
+              rows={4}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+          </div>
 
-          {/* Visibility Messages */}
-          {loading && (
-            <div className="text-center border border-yellow-400 bg-yellow-50 text-yellow-700 font-semibold py-3 rounded-md animate-pulse">
-              ⏳ Submitting your appointment request…
-            </div>
-          )}
-
-          {success && (
-            <div className="text-center border border-green-500 bg-green-50 text-green-700 font-semibold py-3 rounded-md">
-              ✔ Appointment request submitted successfully! Redirecting…
-            </div>
-          )}
-
-          <Button variant="gold" type="submit" className="w-full" disabled={loading}>
-            {loading ? "Submitting…" : "Submit Request"}
+          <Button variant="gold" type="submit" className="w-full py-3 text-base">
+            Submit Appointment Request
           </Button>
         </form>
       </section>
