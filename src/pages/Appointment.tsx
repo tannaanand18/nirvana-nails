@@ -6,8 +6,7 @@ import { Footer } from "../components/ui/Footer";
 import { Button } from "../components/ui/button";
 import { auth, db } from "../firebase";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
-
-const WHATSAPP_NUMBER = "919512267420"; // 👈 your Rajkot number with country code
+import emailjs from "@emailjs/browser";
 
 const Appointment = () => {
   const [user, setUser] = useState<any>(null);
@@ -16,9 +15,9 @@ const Appointment = () => {
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
-  // Common input style (dark + gold focus)
+  // Improved input style
   const inputClass =
-    "w-full rounded-md border border-border bg-card/80 px-3 py-2 " +
+    "w-full rounded-md border border-border bg-card px-3 py-2 " +
     "text-foreground placeholder:text-muted-foreground " +
     "focus:outline-none focus:ring-2 focus:ring-gold";
 
@@ -37,11 +36,7 @@ const Appointment = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) {
-      alert("User not found, please login again.");
-      window.location.href = "/login";
-      return;
-    }
+    if (!user) return;
 
     // 1️⃣ Save appointment in Firestore
     await addDoc(collection(db, "appointments"), {
@@ -56,29 +51,22 @@ const Appointment = () => {
       userId: user.uid,
     });
 
-    // 2️⃣ Build WhatsApp message
-    const message = `Hi Nirvana Nails 💅,
+    // 2️⃣ Send Email using EmailJS
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        name: user.displayName || user.email,
+        email: user.email,
+        service: selectedService,
+        date,
+        time,
+        notes,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
 
-New appointment request:
-
-Name: ${user.displayName || user.email}
-Email: ${user.email}
-Service: ${selectedService}
-Date: ${date}
-Time: ${time}
-Notes: ${notes || "—"}
-
-Sent from the Nirvana Nails website.`;
-
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-      message
-    )}`;
-
-    // 3️⃣ Open WhatsApp in new tab (mobile will open app)
-    window.open(whatsappUrl, "_blank");
-
-    // 4️⃣ Show confirmation + redirect
-    alert("Appointment request sent 🥰 We’ve opened WhatsApp with your details.");
+    alert("Appointment request submitted 🥰\nYou will receive a confirmation soon!");
     window.location.href = "/dashboard";
   };
 
@@ -93,25 +81,21 @@ Sent from the Nirvana Nails website.`;
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-card/60 p-8 rounded-2xl shadow-lg space-y-5 border border-border/60"
+          className="max-w-xl mx-auto bg-card/60 p-8 rounded-2xl shadow-xl space-y-5 border border-border/60"
         >
           {/* Email */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-muted-foreground">
-              Email
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Email</label>
             <input
               disabled
-              className={`${inputClass} bg-muted cursor-not-allowed`}
               value={user?.email || ""}
+              className={`${inputClass} bg-muted cursor-not-allowed`}
             />
           </div>
 
           {/* Service */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-muted-foreground">
-              Select Service
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Select Service</label>
             <select
               className={inputClass}
               value={selectedService}
@@ -130,9 +114,7 @@ Sent from the Nirvana Nails website.`;
 
           {/* Date */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-muted-foreground">
-              Select Date
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Select Date</label>
             <input
               type="date"
               className={inputClass}
@@ -144,9 +126,7 @@ Sent from the Nirvana Nails website.`;
 
           {/* Time */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-muted-foreground">
-              Select Time
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Select Time</label>
             <input
               type="time"
               className={inputClass}
@@ -158,9 +138,7 @@ Sent from the Nirvana Nails website.`;
 
           {/* Notes */}
           <div className="space-y-1">
-            <label className="text-sm font-medium text-muted-foreground">
-              Notes (optional)
-            </label>
+            <label className="text-sm font-medium text-muted-foreground">Notes (optional)</label>
             <textarea
               className={inputClass}
               rows={3}
@@ -170,8 +148,8 @@ Sent from the Nirvana Nails website.`;
             />
           </div>
 
-          <Button variant="gold" type="submit" className="w-full text-base py-3">
-            Submit Request & Open WhatsApp
+          <Button variant="gold" type="submit" className="w-full py-3 text-base">
+            Submit Appointment
           </Button>
         </form>
       </section>

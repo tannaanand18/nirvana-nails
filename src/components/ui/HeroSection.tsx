@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
+import heroImage from "@/assets/nails1.jpg";
+
 
 const WHATSAPP_NUMBER = "919512267420";   
 const INSTAGRAM_HANDLE = "nirvana_nails0409";
@@ -87,11 +89,12 @@ export const HeroSection = () => {
             </div>
             <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted">
   <img
-    src="/nails1.jpg"
+    src={heroImage}
     alt="Nail Design"
-    className="w-full h-full object-cover"
+    className="w-full h-full object-cover object-center"
   />
 </div>
+
 
 
 
