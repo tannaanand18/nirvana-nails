@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
+import heroImage from "@/photos/nails1.jpg";
+
 
 const WHATSAPP_NUMBER = "919512267420";   
 const INSTAGRAM_HANDLE = "nirvana_nails0409";
@@ -85,13 +87,14 @@ export const HeroSection = () => {
                 Bridal friendly
               </span>
             </div>
-            <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center text-xs text-muted-foreground">
+            <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted">
   <img
-    src="https://www.instagram.com/p/DP8Fo3qgOM-/?img_index=1&igsh=ZGowejhhZ253NWM= "
-    alt="Nail Art"
+    src={heroImage}
+    alt="Nail Design"
     className="w-full h-full object-cover"
   />
 </div>
+
 
             <p className="text-xs text-muted-foreground mb-3">
               Lasts 3–4 weeks with proper care. Perfect for weddings,
