@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
-import heroImage from "../photos/nails1.jpg";
 
 const WHATSAPP_NUMBER = "919512267420";   
 const INSTAGRAM_HANDLE = "nirvana_nails0409";
@@ -86,13 +85,14 @@ export const HeroSection = () => {
                 Bridal friendly
               </span>
             </div>
-            <div className="aspect-video rounded-2xl overflow-hidden mb-4">
+            <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted">
   <img
-    src={heroImage}
+    src="/nails1.jpg"
     alt="Nail Design"
-    className="w-full h-full object-cover object-center rounded-2xl transition-transform duration-500 hover:scale-105"
+    className="w-full h-full object-cover"
   />
 </div>
+
 
 
 
