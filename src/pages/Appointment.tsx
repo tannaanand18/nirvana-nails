@@ -25,6 +25,7 @@ const Appointment = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
     await addDoc(collection(db, "appointments"), {
       name: user.displayName || user.email,
       email: user.email,
@@ -44,77 +45,85 @@ const Appointment = () => {
   return (
     <main className="min-h-screen bg-background text-white">
       <Navbar />
-
-      <section className="pt-32 pb-16 container mx-auto px-4">
-        <h1 className="font-display text-4xl font-bold mb-8 text-center">
+      <section className="pt-32 pb-20 container mx-auto px-4">
+        <h1 className="font-display text-4xl font-bold mb-10 text-center">
           Book Appointment
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-card/60 p-8 rounded-xl shadow-xl space-y-5 border border-gold/20"
+          className="max-w-xl mx-auto bg-card/50 backdrop-blur-lg border border-gold/30 shadow-xl p-8 rounded-2xl space-y-6"
         >
           {/* Email */}
-          <label className="text-sm font-medium">Email</label>
-          <input
-            disabled
-            value={user?.email || ""}
-            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white"
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Email</label>
+            <input
+              disabled
+              className="w-full rounded-lg px-3 py-2 bg-muted/40 border border-border/40 text-white cursor-not-allowed"
+              value={user?.email || ""}
+            />
+          </div>
 
           {/* Service */}
-          <label className="text-sm font-medium">Select Service</label>
-          <select
-            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            required
-          >
-            <option value="">Select Service</option>
-            <option value="Gel Polish">Gel Polish</option>
-            <option value="Nail Extensions">Nail Extensions</option>
-            <option value="Nail Art">Nail Art</option>
-            <option value="Press On Nails">Press On Nails</option>
-            <option value="Combo Package">Combo Package</option>
-            <option value="Bridal Nails">Bridal Nails</option>
-          </select>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Service</label>
+            <select
+              className="w-full rounded-lg px-3 py-2 bg-background/40 border border-border/40 text-white focus:ring-2 focus:ring-gold/40"
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              required
+            >
+              <option value="" className="text-black">Select Service</option>
+              <option value="Gel Polish" className="text-black">Gel Polish</option>
+              <option value="Nail Extensions" className="text-black">Nail Extensions</option>
+              <option value="Nail Art" className="text-black">Nail Art</option>
+              <option value="Press On Nails" className="text-black">Press On Nails</option>
+              <option value="Combo Package" className="text-black">Combo Package</option>
+              <option value="Bridal Nails" className="text-black">Bridal Nails</option>
+            </select>
+          </div>
 
           {/* Date */}
-          <label className="text-sm font-medium">Date</label>
-          <input
-            type="date"
-            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Date</label>
+            <input
+              type="date"
+              className="w-full rounded-lg px-3 py-2 bg-background/40 border border-border/40 text-white focus:ring-2 focus:ring-gold/40"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
 
           {/* Time */}
-          <label className="text-sm font-medium">Time</label>
-          <input
-            type="time"
-            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Select Time</label>
+            <input
+              type="time"
+              className="w-full rounded-lg px-3 py-2 bg-background/40 border border-border/40 text-white focus:ring-2 focus:ring-gold/40"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              required
+            />
+          </div>
 
           {/* Notes */}
-          <label className="text-sm font-medium">Notes (optional)</label>
-          <textarea
-            rows={3}
-            placeholder="Anything you want to mention..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
-          />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Notes (optional)</label>
+            <textarea
+              className="w-full rounded-lg px-3 py-2 bg-background/40 border border-border/40 text-white focus:ring-2 focus:ring-gold/40"
+              rows={3}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Anything you want to mention..."
+            />
+          </div>
 
           <Button variant="gold" type="submit" className="w-full py-3 text-base">
-            Submit Appointment
+            Submit Request
           </Button>
         </form>
       </section>
-
       <Footer />
     </main>
   );
