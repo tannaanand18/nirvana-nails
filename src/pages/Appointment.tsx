@@ -80,7 +80,7 @@ const Appointment = () => {
               <option value="Nail Art">Nail Art</option>
               <option value="Press On Nails">Press On Nails</option>
               <option value="Combo Package">Combo Package</option>
-              <option value="Bridal Nails">Bridal Nails</option>
+              
             </select>
           </div>
 
