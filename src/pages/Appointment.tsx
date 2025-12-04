@@ -25,7 +25,6 @@ const Appointment = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     await addDoc(collection(db, "appointments"), {
       name: user.displayName || user.email,
       email: user.email,
@@ -38,105 +37,79 @@ const Appointment = () => {
       userId: user.uid,
     });
 
-    alert("Your appointment request has been sent successfully 🥰");
+    alert("Appointment request sent 🥰");
     window.location.href = "/dashboard";
   };
 
-  const inputStyle =
-    "w-full border border-border/50 rounded-lg px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold transition";
-
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-white">
       <Navbar />
 
-      <section className="pt-32 pb-20 container mx-auto px-4">
-        <h1 className="font-display text-center text-4xl sm:text-5xl font-bold mb-10">
-          Book an Appointment 💅
+      <section className="pt-32 pb-16 container mx-auto px-4">
+        <h1 className="font-display text-4xl font-bold mb-8 text-center">
+          Book Appointment
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-card/70 backdrop-blur-md border border-border/40 rounded-2xl shadow-2xl p-8 space-y-5"
+          className="max-w-xl mx-auto bg-card/60 p-8 rounded-xl shadow-xl space-y-5 border border-gold/20"
         >
           {/* Email */}
-          <div>
-            <label className="text-sm font-medium mb-1 block text-muted-foreground">
-              Email
-            </label>
-            <input
-              disabled
-              className={`${inputStyle} bg-muted cursor-not-allowed`}
-              value={user?.email || ""}
-            />
-          </div>
+          <label className="text-sm font-medium">Email</label>
+          <input
+            disabled
+            value={user?.email || ""}
+            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white"
+          />
 
           {/* Service */}
-          <div>
-            <label className="text-sm font-medium mb-1 block text-muted-foreground">
-              Choose Service
-            </label>
-            <select
-              className={inputStyle}
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              required
-            >
-              <option value="">Select Service</option>
-              <option value="Gel Polish">Gel Polish</option>
-              <option value="Nail Extensions">Nail Extensions</option>
-              <option value="Nail Art">Nail Art</option>
-              <option value="Press On Nails">Press On Nails</option>
-              <option value="Combo Package">Combo Package</option>
-              <option value="Bridal Nails">Bridal Nails</option>
-            </select>
-          </div>
+          <label className="text-sm font-medium">Select Service</label>
+          <select
+            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
+            value={selectedService}
+            onChange={(e) => setSelectedService(e.target.value)}
+            required
+          >
+            <option value="">Select Service</option>
+            <option value="Gel Polish">Gel Polish</option>
+            <option value="Nail Extensions">Nail Extensions</option>
+            <option value="Nail Art">Nail Art</option>
+            <option value="Press On Nails">Press On Nails</option>
+            <option value="Combo Package">Combo Package</option>
+            <option value="Bridal Nails">Bridal Nails</option>
+          </select>
 
           {/* Date */}
-          <div>
-            <label className="text-sm font-medium mb-1 block text-muted-foreground">
-              Preferred Date
-            </label>
-            <input
-              type="date"
-              className={inputStyle}
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-          </div>
+          <label className="text-sm font-medium">Date</label>
+          <input
+            type="date"
+            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
 
           {/* Time */}
-          <div>
-            <label className="text-sm font-medium mb-1 block text-muted-foreground">
-              Preferred Time
-            </label>
-            <input
-              type="time"
-              className={inputStyle}
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              required
-            />
-          </div>
+          <label className="text-sm font-medium">Time</label>
+          <input
+            type="time"
+            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            required
+          />
 
           {/* Notes */}
-          <div>
-            <label className="text-sm font-medium mb-1 block text-muted-foreground">
-              Notes (optional)
-            </label>
-            <textarea
-              className={`${inputStyle} min-h-[90px]`}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Anything you want to mention… (optional)"
-            />
-          </div>
+          <label className="text-sm font-medium">Notes (optional)</label>
+          <textarea
+            rows={3}
+            placeholder="Anything you want to mention..."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="w-full px-3 py-2 rounded bg-zinc-800/60 border border-zinc-700 text-white focus:ring-2 focus:ring-gold focus:outline-none"
+          />
 
-          <Button
-            variant="gold"
-            type="submit"
-            className="w-full text-base py-3 font-semibold"
-          >
+          <Button variant="gold" type="submit" className="w-full py-3 text-base">
             Submit Appointment
           </Button>
         </form>
