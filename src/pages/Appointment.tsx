@@ -17,15 +17,15 @@ const Appointment = () => {
       if (!u) {
         alert("Please login first");
         window.location.href = "/login";
-      } else {
-        setUser(u);
       }
+      setUser(u);
     });
     return () => unsub();
   }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
     await addDoc(collection(db, "appointments"), {
       name: user.displayName || user.email,
       email: user.email,
@@ -38,12 +38,12 @@ const Appointment = () => {
       userId: user.uid,
     });
 
-    alert("Appointment request submitted successfully 🥰");
+    alert("Appointment request sent 🥰");
     window.location.href = "/dashboard";
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background">
       <Navbar />
 
       <section className="pt-32 pb-20 container mx-auto px-4">
@@ -53,75 +53,67 @@ const Appointment = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto space-y-5 bg-card/30 backdrop-blur-md p-8 rounded-2xl border border-gold/20 shadow-lg"
+          className="max-w-xl mx-auto bg-card/60 p-8 rounded-xl shadow-lg space-y-5 border border-gold/20"
         >
-          {/* Email field */}
-          <div>
-            <label className="text-sm font-medium mb-1 block">Email</label>
-            <input
-              disabled
-              className="w-full border rounded-lg px-4 py-3 bg-muted text-muted-foreground"
-              value={user?.email || ""}
-            />
-          </div>
+          {/* Email */}
+          <label className="text-sm font-medium text-muted-foreground">Email</label>
+          <input
+            disabled
+            className="w-full border rounded px-3 py-2 bg-muted text-white"
+            value={user?.email || ""}
+          />
 
-          {/* Select Service */}
-          <div>
-            <label className="text-sm font-medium mb-1 block">Select Service*</label>
-            <select
-              className="w-full border rounded-lg px-4 py-3 bg-background"
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              required
-            >
-              <option value="">-- Choose a service --</option>
-              <option value="Gel Polish">Gel Polish</option>
-              <option value="Nail Extensions">Nail Extensions</option>
-              <option value="Nail Art">Nail Art</option>
-              <option value="Press On Nails">Press On Nails</option>
-              <option value="Combo Package">Combo Package</option>
-              
-            </select>
-          </div>
+          {/* Service */}
+          <label className="text-sm font-medium text-muted-foreground">
+            Select Service
+          </label>
+          <select
+            className="w-full border rounded px-3 py-2 bg-background"
+            value={selectedService}
+            onChange={(e) => setSelectedService(e.target.value)}
+            required
+          >
+            <option value="">Select Service</option>
+            <option value="Gel Polish">Gel Polish</option>
+            <option value="Nail Extensions">Nail Extensions</option>
+            <option value="Nail Art">Nail Art</option>
+            <option value="Press On Nails">Press On Nails</option>
+            <option value="Combo Package">Combo Package</option>
+            <option value="Bridal Nails">Bridal Nails</option>
+          </select>
 
-          {/* Date field */}
-          <div>
-            <label className="text-sm font-medium mb-1 block">Date*</label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-4 py-3 bg-background"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-          </div>
+          {/* Date */}
+          <label className="text-sm font-medium text-muted-foreground">Select Date</label>
+          <input
+            type="date"
+            className="w-full border rounded px-3 py-2 bg-background"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
 
-          {/* Time field */}
-          <div>
-            <label className="text-sm font-medium mb-1 block">Time*</label>
-            <input
-              type="time"
-              className="w-full border rounded-lg px-4 py-3 bg-background"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              required
-            />
-          </div>
+          {/* Time */}
+          <label className="text-sm font-medium text-muted-foreground">Select Time</label>
+          <input
+            type="time"
+            className="w-full border rounded px-3 py-2 bg-background"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            required
+          />
 
           {/* Notes */}
-          <div>
-            <label className="text-sm font-medium mb-1 block">Notes (optional)</label>
-            <textarea
-              className="w-full border rounded-lg px-4 py-3 bg-background resize-none"
-              placeholder="Describe your preferred design / color / reference etc."
-              rows={4}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </div>
+          <label className="text-sm font-medium text-muted-foreground">Notes (optional)</label>
+          <textarea
+            className="w-full border rounded px-3 py-2 bg-background"
+            rows={3}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Anything you want to mention..."
+          />
 
-          <Button variant="gold" type="submit" className="w-full py-3 text-base">
-            Submit Appointment Request
+          <Button variant="gold" type="submit" className="w-full text-base py-3">
+            Submit Appointment
           </Button>
         </form>
       </section>
