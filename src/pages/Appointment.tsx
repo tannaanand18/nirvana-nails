@@ -1,5 +1,3 @@
-// src/pages/Appointment.tsx
-
 import { useState, useEffect } from "react";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
@@ -8,7 +6,7 @@ import { auth, db } from "../firebase";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 
-const WHATSAPP_NUMBER = "919512267420"; // ✅ your number with country code
+const WHATSAPP_NUMBER = "919512267420"; // Rajkot number with country code
 
 const Appointment = () => {
   const [user, setUser] = useState<any>(null);
@@ -56,31 +54,23 @@ const Appointment = () => {
       userId: user.uid,
     });
 
-    // 2️⃣ Send email via EmailJS
-    try {
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID as string,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string,
-        {
-          name: user.displayName || user.email,
-          email: user.email,
-          service: selectedService,
-          date,
-          time,
-          notes: notes || "—",
-        },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string
-      );
-      console.log("EmailJS: appointment email sent");
-    } catch (err) {
-      console.error("EmailJS error", err);
-      // Not fatal – we still continue with WhatsApp + Firestore
-    }
+    // 2️⃣ EmailJS — Send appointment alert email
+    await emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        name: user.displayName || user.email,
+        email: user.email,
+        service: selectedService,
+        date,
+        time,
+        notes,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    );
 
     // 3️⃣ Build WhatsApp message
-    const message = `Hi Nirvana Nails 💅,
-
-New appointment request:
+    const message = `💅 New Appointment Request 💅
 
 Name: ${user.displayName || user.email}
 Email: ${user.email}
@@ -89,20 +79,16 @@ Date: ${date}
 Time: ${time}
 Notes: ${notes || "—"}
 
-Sent from the Nirvana Nails website.`;
+Sent from Nirvana Nails Website ✨`;
 
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       message
     )}`;
 
-    // 4️⃣ Open WhatsApp (new tab / app on mobile)
     window.open(whatsappUrl, "_blank");
 
-    alert(
-      "Appointment request sent 🥰\n\nDetails saved + email sent + WhatsApp opened."
-    );
-
-window.location.href = "/";
+    alert("Appointment request sent 🥰 We opened WhatsApp & emailed you.");
+    window.location.href = "/dashboard";
   };
 
   return (
@@ -194,7 +180,7 @@ window.location.href = "/";
           </div>
 
           <Button variant="gold" type="submit" className="w-full text-base py-3">
-            Submit Request & Open WhatsApp
+            Confirm Appointment
           </Button>
         </form>
       </section>
