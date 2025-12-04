@@ -1,7 +1,7 @@
 import { MessageCircle, Instagram, Copyright } from "lucide-react";
 
-const WHATSAPP_NUMBER = "918866220502";
-const INSTAGRAM_HANDLE = "tanna_anand_18";
+const WHATSAPP_NUMBER = "919512267420";   
+const INSTAGRAM_HANDLE = "nirvana_nails0409";
 
 export const Footer = () => {
   const year = new Date().getFullYear();

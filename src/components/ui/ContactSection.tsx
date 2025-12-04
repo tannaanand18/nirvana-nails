@@ -1,8 +1,8 @@
 import { Button } from "./button";
 import { MessageCircle, Instagram, Clock, MapPin } from "lucide-react";
 
-const WHATSAPP_NUMBER = "918866220502";
-const INSTAGRAM_HANDLE = "tanna_anand_18";
+const WHATSAPP_NUMBER = "919512267420";
+const INSTAGRAM_HANDLE = "nirvana_nails0409";
 
 export const ContactSection = () => {
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(

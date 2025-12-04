@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "919512267420";   // 91 + India code + number
+const WHATSAPP_NUMBER = "919512267420";   
 const INSTAGRAM_HANDLE = "nirvana_nails0409";
 
 export const HeroSection = () => {
