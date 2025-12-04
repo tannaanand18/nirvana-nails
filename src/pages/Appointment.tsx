@@ -102,7 +102,7 @@ Sent from the Nirvana Nails website.`;
       "Appointment request sent 🥰\n\nDetails saved + email sent + WhatsApp opened."
     );
 
-    window.location.href = "/dashboard";
+window.location.href = "/";
   };
 
   return (
