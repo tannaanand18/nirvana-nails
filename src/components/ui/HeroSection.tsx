@@ -86,8 +86,13 @@ export const HeroSection = () => {
               </span>
             </div>
             <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center text-xs text-muted-foreground">
-              <span>Showcase your best nail set here</span>
-            </div>
+  <img
+    src="/src/assets/hero/nails1.jpg"
+    alt="Nail Art"
+    className="w-full h-full object-cover"
+  />
+</div>
+
             <p className="text-xs text-muted-foreground mb-3">
               Lasts 3–4 weeks with proper care. Perfect for weddings,
               functions and shoots.
