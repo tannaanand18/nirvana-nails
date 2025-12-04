@@ -12,6 +12,9 @@ const Appointment = () => {
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((u) => {
       if (!u) {
@@ -25,20 +28,36 @@ const Appointment = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await addDoc(collection(db, "appointments"), {
-      name: user.displayName || user.email,
-      email: user.email,
-      service: selectedService,
-      date,
-      time,
-      notes,
-      createdAt: Timestamp.now(),
-      status: "Pending",
-      userId: user.uid,
-    });
+    setLoading(true);
+    setSuccess(false);
 
-    alert("Appointment request sent 🥰");
-    window.location.href = "/dashboard";
+    try {
+      await addDoc(collection(db, "appointments"), {
+        name: user.displayName || user.email,
+        email: user.email,
+        service: selectedService,
+        date,
+        time,
+        notes,
+        createdAt: Timestamp.now(),
+        status: "Pending",
+        userId: user.uid,
+      });
+
+      setSuccess(true);
+      setSelectedService("");
+      setDate("");
+      setTime("");
+      setNotes("");
+
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 2000);
+    } catch (error) {
+      alert("Something went wrong ❌");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -49,6 +68,7 @@ const Appointment = () => {
         <h1 className="font-display text-4xl font-bold mb-4">
           Book Appointment
         </h1>
+
         <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
           <input
             disabled
@@ -95,8 +115,21 @@ const Appointment = () => {
             onChange={(e) => setNotes(e.target.value)}
           />
 
-          <Button variant="gold" type="submit" className="w-full">
-            Submit Request
+          {/* Visibility Messages */}
+          {success && (
+            <p className="text-green-600 font-medium border border-green-400 rounded-md p-2 bg-green-50">
+              ✔ Appointment request sent! Redirecting to dashboard…
+            </p>
+          )}
+
+          {loading && (
+            <p className="text-yellow-600 font-medium border border-yellow-400 rounded-md p-2 bg-yellow-50 animate-pulse">
+              ⏳ Sending request…
+            </p>
+          )}
+
+          <Button variant="gold" type="submit" className="w-full" disabled={loading}>
+            {loading ? "Submitting…" : "Submit Request"}
           </Button>
         </form>
       </section>
