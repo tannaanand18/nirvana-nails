@@ -38,81 +38,105 @@ const Appointment = () => {
       userId: user.uid,
     });
 
-    alert("Appointment request sent 🥰");
+    alert("Your appointment request has been sent successfully 🥰");
     window.location.href = "/dashboard";
   };
 
+  const inputStyle =
+    "w-full border border-border/50 rounded-lg px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold transition";
+
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
       <section className="pt-32 pb-20 container mx-auto px-4">
-        <h1 className="font-display text-4xl font-bold mb-8 text-center">
-          Book Appointment
+        <h1 className="font-display text-center text-4xl sm:text-5xl font-bold mb-10">
+          Book an Appointment 💅
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-card/60 p-8 rounded-xl shadow-lg space-y-5 border border-gold/20"
+          className="max-w-xl mx-auto bg-card/70 backdrop-blur-md border border-border/40 rounded-2xl shadow-2xl p-8 space-y-5"
         >
           {/* Email */}
-          <label className="text-sm font-medium text-muted-foreground">Email</label>
-          <input
-            disabled
-            className="w-full border rounded px-3 py-2 bg-muted text-white"
-            value={user?.email || ""}
-          />
+          <div>
+            <label className="text-sm font-medium mb-1 block text-muted-foreground">
+              Email
+            </label>
+            <input
+              disabled
+              className={`${inputStyle} bg-muted cursor-not-allowed`}
+              value={user?.email || ""}
+            />
+          </div>
 
           {/* Service */}
-          <label className="text-sm font-medium text-muted-foreground">
-            Select Service
-          </label>
-          <select
-            className="w-full border rounded px-3 py-2 bg-background"
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            required
-          >
-            <option value="">Select Service</option>
-            <option value="Gel Polish">Gel Polish</option>
-            <option value="Nail Extensions">Nail Extensions</option>
-            <option value="Nail Art">Nail Art</option>
-            <option value="Press On Nails">Press On Nails</option>
-            <option value="Combo Package">Combo Package</option>
-            <option value="Bridal Nails">Bridal Nails</option>
-          </select>
+          <div>
+            <label className="text-sm font-medium mb-1 block text-muted-foreground">
+              Choose Service
+            </label>
+            <select
+              className={inputStyle}
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              required
+            >
+              <option value="">Select Service</option>
+              <option value="Gel Polish">Gel Polish</option>
+              <option value="Nail Extensions">Nail Extensions</option>
+              <option value="Nail Art">Nail Art</option>
+              <option value="Press On Nails">Press On Nails</option>
+              <option value="Combo Package">Combo Package</option>
+              <option value="Bridal Nails">Bridal Nails</option>
+            </select>
+          </div>
 
           {/* Date */}
-          <label className="text-sm font-medium text-muted-foreground">Select Date</label>
-          <input
-            type="date"
-            className="w-full border rounded px-3 py-2 bg-background"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+          <div>
+            <label className="text-sm font-medium mb-1 block text-muted-foreground">
+              Preferred Date
+            </label>
+            <input
+              type="date"
+              className={inputStyle}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
 
           {/* Time */}
-          <label className="text-sm font-medium text-muted-foreground">Select Time</label>
-          <input
-            type="time"
-            className="w-full border rounded px-3 py-2 bg-background"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
+          <div>
+            <label className="text-sm font-medium mb-1 block text-muted-foreground">
+              Preferred Time
+            </label>
+            <input
+              type="time"
+              className={inputStyle}
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              required
+            />
+          </div>
 
           {/* Notes */}
-          <label className="text-sm font-medium text-muted-foreground">Notes (optional)</label>
-          <textarea
-            className="w-full border rounded px-3 py-2 bg-background"
-            rows={3}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Anything you want to mention..."
-          />
+          <div>
+            <label className="text-sm font-medium mb-1 block text-muted-foreground">
+              Notes (optional)
+            </label>
+            <textarea
+              className={`${inputStyle} min-h-[90px]`}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Anything you want to mention… (optional)"
+            />
+          </div>
 
-          <Button variant="gold" type="submit" className="w-full text-base py-3">
+          <Button
+            variant="gold"
+            type="submit"
+            className="w-full text-base py-3 font-semibold"
+          >
             Submit Appointment
           </Button>
         </form>
