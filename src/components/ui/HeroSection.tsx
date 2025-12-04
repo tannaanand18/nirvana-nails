@@ -87,13 +87,14 @@ export const HeroSection = () => {
                 Bridal friendly
               </span>
             </div>
-            <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted">
+            <div className="aspect-video rounded-2xl overflow-hidden mb-4">
   <img
     src={heroImage}
     alt="Nail Design"
-    className="w-full h-full object-cover"
+    className="w-full h-full object-cover object-center rounded-2xl transition-transform duration-500 hover:scale-105"
   />
 </div>
+
 
 
             <p className="text-xs text-muted-foreground mb-3">
