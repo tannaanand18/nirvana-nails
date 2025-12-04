@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "918866220502";
-const INSTAGRAM_HANDLE = "tanna_anand_18";
+const WHATSAPP_NUMBER = "919512267420";   // 91 + India code + number
+const INSTAGRAM_HANDLE = "nirvana_nails0409";
 
 export const HeroSection = () => {
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -14,7 +14,6 @@ export const HeroSection = () => {
 
   return (
     <section className="pt-28 pb-20 bg-gradient-hero relative overflow-hidden">
-      {/* Background glow */}
       <div className="absolute inset-0">
         <div className="absolute -top-32 -left-24 w-80 h-80 bg-purple-deep/25 rounded-full blur-3xl" />
         <div className="absolute top-40 right-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl" />
@@ -22,12 +21,11 @@ export const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10 grid gap-12 md:grid-cols-2 items-center">
-        {/* Text */}
         <div>
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass gold-border mb-5">
             <Sparkles className="w-4 h-4 text-gold" />
             <span className="text-xs font-medium text-gold uppercase tracking-[0.2em]">
-              Ahmedabad • Nail Studio
+              Rajkot • Nail Studio
             </span>
           </span>
 
@@ -76,7 +74,6 @@ export const HeroSection = () => {
           </div>
         </div>
 
-        {/* Visual placeholder / card */}
         <div className="relative">
           <div className="rounded-3xl border border-gold/30 bg-card/70 p-6 shadow-xl max-w-md mx-auto">
             <div className="flex items-center justify-between mb-4">
@@ -89,7 +86,6 @@ export const HeroSection = () => {
               </span>
             </div>
             <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center text-xs text-muted-foreground">
-              {/* Replace with your real hero image later */}
               <span>Showcase your best nail set here</span>
             </div>
             <p className="text-xs text-muted-foreground mb-3">

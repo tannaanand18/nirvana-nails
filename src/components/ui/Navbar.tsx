@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { auth } from "../../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
-const WHATSAPP_NUMBER = "918866220502";
+const WHATSAPP_NUMBER = "919512267420"; 
 
 const navLinks = [
   { label: "Home", to: "/" },
