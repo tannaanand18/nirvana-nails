@@ -87,7 +87,7 @@ export const HeroSection = () => {
             </div>
             <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center text-xs text-muted-foreground">
   <img
-    src="/src/assets/hero/nails1.jpg"
+    src="https://www.instagram.com/p/DP8Fo3qgOM-/?img_index=1&igsh=ZGowejhhZ253NWM= "
     alt="Nail Art"
     className="w-full h-full object-cover"
   />
