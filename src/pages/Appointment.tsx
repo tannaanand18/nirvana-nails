@@ -29,33 +29,34 @@ const Appointment = () => {
     return () => unsub();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    // prevent double form submit
-    (e.target as HTMLFormElement).querySelector("button")!.disabled = true;
+  if (!user) {
+    alert("Please login again");
+    window.location.href = "/login";
+    return;
+  }
 
-    if (!user) {
-      alert("User not found, please login again.");
-      window.location.href = "/login";
-      return;
-    }
+  // disable button to block double click
+  const submitButton = (e.target as HTMLFormElement).querySelector("button");
+  if (submitButton) submitButton.disabled = true;
 
-    // Save appointment in Firestore
-    await addDoc(collection(db, "appointments"), {
-      name: user.displayName || user.email,
-      email: user.email,
-      service: selectedService,
-      date,
-      time,
-      notes,
-      createdAt: Timestamp.now(),
-      status: "Pending",
-      userId: user.uid,
-    });
+  // Save to firestore (only once)
+  await addDoc(collection(db, "appointments"), {
+    name: user.displayName || user.email,
+    email: user.email,
+    service: selectedService,
+    date,
+    time,
+    notes,
+    createdAt: Timestamp.now(),
+    status: "Pending",
+    userId: user.uid,
+  });
 
-    // Build WhatsApp message
-    const message = `Hi Nirvana Nails 💅,
+  // ⚠️ Open WhatsApp **after page redirect** to avoid resubmission
+  const message = `Hi Nirvana Nails 💅,
 
 New appointment request:
 
@@ -68,20 +69,22 @@ Notes: ${notes || "—"}
 
 Sent from the Nirvana Nails website.`;
 
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-      message
-    )}`;
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    message
+  )}`;
 
-    // Open WhatsApp without reloading page
+  alert("Appointment sent successfully 🥰");
+
+  // First redirect to dashboard
+  setTimeout(() => {
+    window.location.href = "/dashboard";
+  }, 500);
+
+  // Then open WhatsApp (1 second later) — won't trigger form again
+  setTimeout(() => {
     window.open(whatsappUrl, "_blank");
-
-    alert("Appointment request sent 🥰");
-
-    // Redirect after 1 sec to avoid repeat submit
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 1000);
-  };
+  }, 1200);
+};
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -171,16 +174,15 @@ Sent from the Nirvana Nails website.`;
             />
           </div>
 
-          {/* Button — prevents double submit */}
-          <Button
-            variant="gold"
-            type="submit"
-            className="w-full text-base py-3"
-            disabled={!selectedService || !date || !time}
-            onClick={(e) => e.stopPropagation()}
-          >
-            Submit Request & Open WhatsApp
-          </Button>
+        <Button
+  variant="gold"
+  type="submit"
+  className="w-full text-base py-3"
+  disabled={!selectedService || !date || !time}
+>
+  Submit Request & Open WhatsApp
+</Button>
+
         </form>
       </section>
 
