@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { Sparkles, Instagram, MessageCircle } from "lucide-react";
-import heroImage from "@/photos/nails1.jpg";
+import heroImage from "@/photos/nails.jpg";
 
 
 const WHATSAPP_NUMBER = "919512267420";   
