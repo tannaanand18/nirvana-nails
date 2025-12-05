@@ -1,21 +1,25 @@
+import { useEffect, useState } from "react";
+import { db } from "../../firebase"; // fixed import
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
+
 export const ReviewsSection = () => {
-  const reviews = [
-    {
-      name: "Riya Shah",
-      text: "My bridal nails were PERFECT. They matched my lehenga exactly and didn’t chip at all.",
-      label: "Bridal Package",
-    },
-    {
-      name: "Krisha Patel",
-      text: "I showed a Pinterest photo and she recreated it even better. Super gentle and hygienic.",
-      label: "Nail Art + Extensions",
-    },
-    {
-      name: "Simran Mehta",
-      text: "I keep coming back every month. The gel polish lasts long and looks fresh till my next visit.",
-      label: "Regular Gel Polish",
-    },
-  ];
+  const [reviews, setReviews] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const q = query(
+        collection(db, "reviews"),
+        where("approved", "==", true),       // ⭐ only show approved reviews
+        orderBy("createdAt", "desc")         // newest first
+      );
+
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map((d) => d.data());
+      setReviews(data);
+    };
+
+    fetchReviews();
+  }, []);
 
   return (
     <section className="py-16 bg-card/40 border-y border-border/30">
@@ -25,27 +29,39 @@ export const ReviewsSection = () => {
             Client <span className="text-gradient">Love</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Real stories from clients who trusted Nirvana Nails for their big days
-            and everyday glam.
+            Verified reviews from real clients who trusted Nirvana Nails 💅
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {reviews.map((review) => (
-            <div
-              key={review.name}
-              className="rounded-2xl bg-background/80 border border-border/40 p-6 flex flex-col justify-between"
-            >
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                “{review.text}”
-              </p>
-              <div>
-                <p className="text-sm font-semibold">{review.name}</p>
-                <p className="text-xs text-gold mt-1">{review.label}</p>
+        {reviews.length === 0 ? (
+          <p className="text-center text-muted-foreground text-sm">
+            ⭐ Reviews will appear here after approval.
+          </p>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {reviews.map((review, index) => (
+              <div
+                key={index}
+                className="rounded-2xl bg-background/80 border border-border/40 p-6 flex flex-col justify-between"
+              >
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                  “{review.text}”
+                </p>
+                <div>
+                  <p className="text-sm font-semibold">{review.name}</p>
+                  <p className="text-xs text-gold mt-1">{review.label}</p>
+
+                  {/* ⭐ rating */}
+                  <div className="flex gap-1 mt-2">
+                    {Array.from({ length: review.rating }).map((_, i) => (
+                      <span key={i} className="text-gold text-lg">⭐</span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
