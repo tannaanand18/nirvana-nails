@@ -1,19 +1,19 @@
+// firebase.ts
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCBdtYZIJCWH8ZLBgfzMZvW3VaG53KYlyY",
-  authDomain: "nirvana-nails.firebaseapp.com",
-  projectId: "nirvana-nails",
-  storageBucket: "nirvana-nails.firebasestorage.app",
-  messagingSenderId: "637956189342",
-  appId: "1:637956189342:web:84e288baae4ab602e15f8f",
-  measurementId: "G-WKDENXF7C9",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export default app;

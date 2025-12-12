@@ -16,6 +16,8 @@ import AdminAppointments from "./pages/AdminAppointments";
 
 
 
+
+
 const queryClient = new QueryClient();
 
 const App = () => (

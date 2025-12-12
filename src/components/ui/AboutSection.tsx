@@ -57,7 +57,7 @@ export const AboutSection = () => {
 
             <p className="text-muted-foreground leading-relaxed mb-6">
               With a vision to redefine nail artistry, <b>Dr. Chandni Tanna</b>
-              built Nirvana Nails as a luxury space where creativity, hygiene, and
+               built Nirvana Nails as a luxury space where creativity, hygiene, and
               premium care come together. Her expertise in nail extensions,
               bridal nail designs, and long-lasting gel finishes has transformed
               the beauty experience for countless clients.
