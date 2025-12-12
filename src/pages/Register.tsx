@@ -1,6 +1,8 @@
+// src/pages/Register.tsx
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
 import { Button } from "../components/ui/button";
@@ -17,13 +19,23 @@ const Register = () => {
     setSuccessMsg("");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCred.user;
+
+      // write user doc with default role = "user"
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: "user",
+        createdAt: new Date().toISOString(),
+      });
+
       setSuccessMsg("Account created 🎉 You can now login");
       setTimeout(() => {
         window.location.href = "/login";
       }, 1200);
     } catch (error: any) {
-      setErrorMsg("This account already exists ❌");
+      console.error(error);
+      setErrorMsg(error?.message || "This account already exists ❌");
     }
   };
 
@@ -32,9 +44,7 @@ const Register = () => {
       <Navbar />
 
       <section className="pt-32 pb-10 container mx-auto px-4 max-w-md">
-        <h1 className="font-display text-3xl font-bold mb-6 text-center">
-          Register
-        </h1>
+        <h1 className="font-display text-3xl font-bold mb-6 text-center">Register</h1>
 
         {errorMsg && (
           <p className="mb-3 text-sm text-red-500 bg-red-500/10 p-2 rounded-md text-center">
@@ -79,10 +89,7 @@ const Register = () => {
 
         <p className="text-center mt-5 text-sm text-muted-foreground">
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-gold font-medium hover:underline"
-          >
+          <a href="/login" className="text-gold font-medium hover:underline">
             Login
           </a>
         </p>
