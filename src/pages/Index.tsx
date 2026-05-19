@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Navbar } from "../components/ui/Navbar";
 import { HeroSection } from "../components/ui/HeroSection";
 import { ServicesSection } from "../components/ui/ServicesSection";
@@ -6,32 +7,43 @@ import { AboutSection } from "../components/ui/AboutSection";
 import { GalleryPreview } from "../components/ui/GalleryPreview";
 import { ContactSection } from "../components/ui/ContactSection";
 import { Footer } from "../components/ui/Footer";
-import { ReviewsSection } from "../components/ui/ReviewsSection"; 
+import { ReviewsSection } from "../components/ui/ReviewsSection";
 import { MessageCircle } from "lucide-react";
-
-const WHATSAPP_NUMBER = "91XXXXXXXXXX"; // ✅ change to your number
+import { Seo } from "@/components/Seo";
+import { SALON_NAME, whatsappLink } from "@/constants/salon";
 
 const Index = () => {
-  useEffect(() => {
-    document.title = "Nirvana Nails – Nail Art & Extensions";
-  }, []);
+  const location = useLocation();
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.replace("#", "");
+    const t = window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+    return () => window.clearTimeout(t);
+  }, [location.hash, location.pathname]);
+
+  const whatsappUrl = whatsappLink(
     "Hi Nirvana Nails 👋, I’d like to book an appointment."
-  )}`;
+  );
 
   return (
     <main className="min-h-screen bg-background">
+      <Seo
+        title={`${SALON_NAME} – Luxury nail studio in Rajkot`}
+        description="Gel nails, acrylics, nail art, manicures & pedicures at Nirvana Nails. Hygienic, detail-obsessed sets for weddings, events, and everyday glam."
+        path="/"
+      />
       <Navbar />
       <HeroSection />
       <ServicesSection />
       <GalleryPreview />
       <AboutSection />
-      <ReviewsSection /> {/* ✅ New section for testimonials */}
+      <ReviewsSection />
       <ContactSection />
       <Footer />
 
-      {/* ✅ Floating WhatsApp button */}
       <a
         href={whatsappUrl}
         target="_blank"

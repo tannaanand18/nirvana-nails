@@ -1,18 +1,20 @@
 import { Link } from "react-router-dom";
 import { Button } from "./button";
-import { Sparkles, Instagram, MessageCircle } from "lucide-react";
+import { Sparkles, Instagram, MessageCircle, Calendar } from "lucide-react";
 import heroImage from "@/assets/nails1.jpg";
-
-
-const WHATSAPP_NUMBER = "919512267420";   
-const INSTAGRAM_HANDLE = "nirvana_nails0409";
+import {
+  INSTAGRAM_HANDLE,
+  SALON_HOURS,
+  instagramProfileUrl,
+  whatsappLink,
+} from "@/constants/salon";
 
 export const HeroSection = () => {
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappUrl = whatsappLink(
     "Hi Nirvana Nails 💅, I’d like to book an appointment."
-  )}`;
+  );
 
-  const instagramUrl = `https://instagram.com/${INSTAGRAM_HANDLE}`;
+  const instagramUrl = instagramProfileUrl();
 
   return (
     <section className="pt-28 pb-20 bg-gradient-hero relative overflow-hidden">
@@ -37,31 +39,33 @@ export const HeroSection = () => {
           </h1>
 
           <p className="text-muted-foreground max-w-xl mb-6 text-sm sm:text-base">
-            From minimal gel polish to full bridal sets – Nirvana Nails crafts
-            custom designs that match your vibe, outfit and occasion. Hygienic,
-            detail-obsessed and long-lasting.
+            From minimal gel polish to full bridal sets – Nirvana Nails crafts custom designs that
+            match your vibe, outfit and occasion. Hygienic, detail-obsessed and long-lasting.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 mb-4">
+            <Link to="/appointment">
+              <Button variant="gold" size="lg" className="inline-flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Book appointment</span>
+              </Button>
+            </Link>
+
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-              <Button
-                variant="gold"
-                size="lg"
-                className="inline-flex items-center gap-2"
-              >
+              <Button variant="glass" size="lg" className="inline-flex items-center gap-2">
                 <MessageCircle className="w-4 h-4" />
-                <span>Book on WhatsApp</span>
+                <span>WhatsApp</span>
               </Button>
             </a>
 
             <Link to="/gallery">
-              <Button variant="glass" size="lg">
-                View Gallery
+              <Button variant="outline" size="lg" className="border-gold/40 text-foreground">
+                View gallery
               </Button>
             </Link>
           </div>
 
-          <div className="flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground">
             <a
               href={instagramUrl}
               target="_blank"
@@ -72,7 +76,7 @@ export const HeroSection = () => {
               <span>@{INSTAGRAM_HANDLE}</span>
             </a>
             <span className="h-1 w-1 rounded-full bg-border" />
-            <span>Open daily • 8:00 PM – 12:00 PM</span>
+            <span>{SALON_HOURS}</span>
           </div>
         </div>
 
@@ -88,23 +92,22 @@ export const HeroSection = () => {
               </span>
             </div>
             <div className="aspect-video rounded-2xl overflow-hidden mb-4 bg-muted">
-  <img
-    src={heroImage}
-    alt="Nail Design"
-    className="w-full h-full object-cover object-center"
-  />
-</div>
-
-
-
-
+              <img
+                src={heroImage}
+                alt="Elegant gel nail set at Nirvana Nails salon"
+                className="w-full h-full object-cover object-center"
+                width={960}
+                height={540}
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
 
             <p className="text-xs text-muted-foreground mb-3">
-              Lasts 3–4 weeks with proper care. Perfect for weddings,
-              functions and shoots.
+              Lasts 3–4 weeks with proper care. Perfect for weddings, functions and shoots.
             </p>
             <p className="text-xs font-medium text-gold">
-              Tap “Book on WhatsApp” to check availability today.
+              Use &quot;Book appointment&quot; for online requests or WhatsApp for instant chat.
             </p>
           </div>
         </div>
