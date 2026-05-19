@@ -8,7 +8,9 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_MESSAGING_SENDER_ID: string;
   readonly VITE_FIREBASE_APP_ID: string;
   readonly VITE_FIREBASE_MEASUREMENT_ID: string;
-  /** Canonical site URL for SEO (no trailing slash), e.g. https://your-project.web.app */
+  /** Comma-separated admin emails, e.g. owner@gmail.com,admin@nirvananails.com */
+  readonly VITE_ADMIN_EMAILS?: string;
+  /** Canonical site URL for SEO (no trailing slash) */
   readonly VITE_SITE_URL?: string;
   readonly VITE_EMAILJS_SERVICE_ID?: string;
   readonly VITE_EMAILJS_TEMPLATE_ID?: string;

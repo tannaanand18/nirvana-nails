@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { auth, isFirebaseConfigured } from "../../firebase";
-import { checkAdmin } from "../../utils/checkAdmin";
-import { signOut } from "firebase/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "./button";
 import { Menu, X } from "lucide-react";
+import { isFirebaseConfigured } from "@/firebase";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   isActive ? "text-gold" : "text-foreground/90 hover:text-gold transition";
 
 export const Navbar = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loadingAdmin, setLoadingAdmin] = useState(true);
+  const { user, logout, isAdmin } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState(() => auth?.currentUser ?? null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,32 +18,9 @@ export const Navbar = () => {
     setMobileOpen(false);
   }, [location.pathname, location.hash]);
 
-  useEffect(() => {
-    if (!auth) {
-      setUser(null);
-      setIsAdmin(false);
-      setLoadingAdmin(false);
-      return;
-    }
-    const unsub = auth.onAuthStateChanged(async (current) => {
-      setUser(current);
-      if (!current) {
-        setIsAdmin(false);
-        setLoadingAdmin(false);
-        return;
-      }
-      setLoadingAdmin(true);
-      const res = await checkAdmin(current.uid);
-      setIsAdmin(res);
-      setLoadingAdmin(false);
-    });
-    return () => unsub();
-  }, []);
-
-  const handleLogout = async () => {
-    if (!auth) return;
-    await signOut(auth);
-    navigate("/login");
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   const scrollToHash = (hash: string) => {
@@ -55,17 +29,16 @@ export const Navbar = () => {
       navigate({ pathname: "/", hash: id });
       return;
     }
-    const el = document.getElementById(id);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const desktopNav = (
+  const navLinks = (
     <>
       <NavLink to="/" className={navLinkClass} end>
         Home
       </NavLink>
       <NavLink to="/services" className={navLinkClass}>
-        Services
+        Treatments
       </NavLink>
       <NavLink to="/gallery" className={navLinkClass}>
         Gallery
@@ -80,7 +53,12 @@ export const Navbar = () => {
       >
         About
       </button>
-      {!loadingAdmin && isAdmin && (
+      {user && (
+        <NavLink to="/dashboard" className={navLinkClass}>
+          My salon
+        </NavLink>
+      )}
+      {isAdmin && (
         <NavLink to="/admin" className={navLinkClass}>
           Admin
         </NavLink>
@@ -102,15 +80,12 @@ export const Navbar = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 font-medium text-sm">
-          {desktopNav}
-        </nav>
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 font-medium text-sm">{navLinks}</nav>
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link to="/appointment">
-            <Button variant="gold" size="sm" className="sm:min-w-[5.5rem]">
-              <span className="hidden sm:inline">Book</span>
-              <span className="sm:hidden">Book</span>
+            <Button variant="gold" size="sm">
+              Book
             </Button>
           </Link>
 
@@ -124,13 +99,13 @@ export const Navbar = () => {
             </button>
           ) : (
             <Link to="/login" className="hidden lg:inline text-sm hover:text-gold transition px-1">
-              Login
+              Sign in
             </Link>
           )}
 
           <button
             type="button"
-            className="lg:hidden p-2 rounded-md border border-border/60 text-foreground hover:bg-muted/50 transition"
+            className="lg:hidden p-2 rounded-md border border-border/60"
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             onClick={() => setMobileOpen((o) => !o)}
@@ -141,13 +116,13 @@ export const Navbar = () => {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-md max-h-[calc(100dvh-4rem)] overflow-y-auto">
+        <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-md">
           <nav className="container mx-auto px-4 py-4 flex flex-col gap-1 text-base font-medium">
             <NavLink to="/" className={navLinkClass} end onClick={() => setMobileOpen(false)}>
               Home
             </NavLink>
             <NavLink to="/services" className={navLinkClass} onClick={() => setMobileOpen(false)}>
-              Services
+              Treatments
             </NavLink>
             <NavLink to="/gallery" className={navLinkClass} onClick={() => setMobileOpen(false)}>
               Gallery
@@ -157,7 +132,7 @@ export const Navbar = () => {
             </NavLink>
             <button
               type="button"
-              className="text-left py-2 text-foreground/90 hover:text-gold transition"
+              className="text-left py-2 text-foreground/90 hover:text-gold"
               onClick={() => {
                 setMobileOpen(false);
                 scrollToHash("#about");
@@ -165,37 +140,26 @@ export const Navbar = () => {
             >
               About
             </button>
-            {!loadingAdmin && isAdmin && (
+            {user && (
+              <NavLink to="/dashboard" className={navLinkClass} onClick={() => setMobileOpen(false)}>
+                My salon
+              </NavLink>
+            )}
+            {isAdmin && (
               <NavLink to="/admin" className={navLinkClass} onClick={() => setMobileOpen(false)}>
                 Admin
               </NavLink>
             )}
             <hr className="border-border my-2" />
             {user ? (
-              <button
-                type="button"
-                className="text-left py-2 text-sm text-muted-foreground hover:text-gold"
-                onClick={() => {
-                  setMobileOpen(false);
-                  void handleLogout();
-                }}
-              >
+              <button type="button" className="text-left py-2 text-sm text-muted-foreground" onClick={handleLogout}>
                 Logout
               </button>
             ) : (
-              <NavLink
-                to="/login"
-                className={navLinkClass}
-                onClick={() => setMobileOpen(false)}
-              >
-                Login
+              <NavLink to="/login" className={navLinkClass} onClick={() => setMobileOpen(false)}>
+                Sign in
               </NavLink>
             )}
-            <Link to="/appointment" onClick={() => setMobileOpen(false)} className="pt-2">
-              <Button variant="gold" className="w-full">
-                Book appointment
-              </Button>
-            </Link>
           </nav>
         </div>
       )}

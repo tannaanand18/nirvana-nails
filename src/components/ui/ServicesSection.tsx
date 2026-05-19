@@ -1,39 +1,11 @@
-import { useEffect, useState } from "react";
+import { Crown, Sparkles, Gem, Palette, Heart, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Sparkles, Gem, Palette, Heart, Crown, Star } from "lucide-react";
-import { db } from "../../firebase";
-import { collection, getDocs, query, limit } from "firebase/firestore";
-import type { ServiceCard } from "@/types/service";
-import { DEFAULT_SERVICES } from "@/lib/defaultServices";
+import { useTreatments } from "@/hooks/useTreatments";
 
 const icons = [Sparkles, Gem, Palette, Heart, Crown, Star];
 
 export const ServicesSection = () => {
-  const [services, setServices] = useState<ServiceCard[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadServices = async () => {
-      if (!db) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const q = query(collection(db, "services"), limit(6));
-        const snap = await getDocs(q);
-        const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as ServiceCard));
-        setServices(list);
-      } catch (err) {
-        console.error("Error loading services for homepage:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadServices();
-  }, []);
-
-  const display = services.length > 0 ? services : DEFAULT_SERVICES;
+  const { treatments, loading } = useTreatments(true);
 
   return (
     <section id="services" className="py-24 bg-background relative overflow-hidden">
@@ -51,52 +23,36 @@ export const ServicesSection = () => {
             <span className="text-gradient">Treatments</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Indulge in our premium nail services, crafted with precision and care to give you the
-            perfect nails you deserve.
+            Indulge in our premium nail services, crafted with precision and care.
           </p>
         </div>
 
-        {loading && (
-          <p className="text-center text-muted-foreground mb-6">Loading services…</p>
-        )}
-
-        {!loading && services.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground mb-8 max-w-lg mx-auto">
-            Showing our signature menu. Sign in to the admin panel anytime to sync live pricing from
-            Firestore.
-          </p>
-        )}
+        {loading && <p className="text-center text-muted-foreground mb-6">Loading treatments…</p>}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {display.map((service, index) => {
+          {treatments.map((treatment, index) => {
             const Icon = icons[index % icons.length];
-
             return (
               <div
-                key={service.id}
+                key={treatment.id}
                 className="group p-8 rounded-2xl bg-gradient-card border border-border/30 hover:border-gold/30 transition-all duration-500 hover:shadow-glow hover:-translate-y-2"
-                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-purple-light flex items-center justify-center mb-6 group-hover:shadow-glow transition-shadow duration-300">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-purple-light flex items-center justify-center mb-6">
                   <Icon className="w-7 h-7 text-primary-foreground" />
                 </div>
                 <h3 className="font-display text-2xl font-semibold text-foreground mb-3">
-                  {service.name}
+                  {treatment.name}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  {service.description || "Beautiful nails, professionally done."}
+                  {treatment.description}
                 </p>
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-gold font-semibold">
-                    {service.price && service.price.trim() !== ""
-                      ? service.price
-                      : "Contact for pricing"}
-                  </span>
+                  <span className="text-gold font-semibold">{treatment.price}</span>
                   <Link
-                    to="/contact"
+                    to="/appointment"
                     className="text-muted-foreground text-sm group-hover:text-gold transition-colors shrink-0"
                   >
-                    Book Now →
+                    Book →
                   </Link>
                 </div>
               </div>

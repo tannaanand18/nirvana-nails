@@ -1,6 +1,5 @@
-// src/firebase.ts — safe init: missing env on Vercel no longer whitescreens the app.
+// Firestore-only app (passwordless login via AuthContext). No Firebase Auth SDK.
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
 const env = import.meta.env;
@@ -21,7 +20,6 @@ const hasRequiredKeys = Boolean(
 );
 
 let app: FirebaseApp | null = null;
-let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
 
 if (hasRequiredKeys) {
@@ -35,22 +33,15 @@ if (hasRequiredKeys) {
       appId: firebaseConfig.appId!,
     };
     app = getApps().length === 0 ? initializeApp(cfg) : getApp();
-    authInstance = getAuth(app);
     dbInstance = getFirestore(app);
   } catch (e) {
-    console.error("[Nirvana Nails] Firebase initialization failed:", e);
+    console.error("[Nirvana Nails] Firebase init failed:", e);
   }
 } else {
-  console.warn(
-    "[Nirvana Nails] Firebase disabled: set VITE_FIREBASE_API_KEY, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_APP_ID (and other VITE_FIREBASE_* vars) in your host — e.g. Vercel → Project → Settings → Environment Variables — then redeploy."
-  );
+  console.warn("[Nirvana Nails] Set VITE_FIREBASE_* env vars to enable Firestore.");
 }
 
-/** False when env vars are missing or init threw — marketing pages still render. */
-export const isFirebaseConfigured = Boolean(app && authInstance && dbInstance);
-
+export const isFirebaseConfigured = Boolean(app && dbInstance);
 export const firebaseApp = app;
-export const auth: Auth | null = authInstance;
 export const db: Firestore | null = dbInstance;
-
 export default firebaseApp;

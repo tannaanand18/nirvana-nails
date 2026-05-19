@@ -1,44 +1,47 @@
-# Deploying Nirvana Nails (Vercel)
+# Nirvana Nails — deployment & setup
 
-## 1. Root directory
+## Vercel environment variables
 
-If this repo contains the `project/` folder as the Vite app, set **Vercel → Settings → General → Root Directory** to `project` (or move these files to the repo root).
+Required Firebase vars (same as before) **plus**:
 
-## 2. Environment variables (required for auth / Firestore)
-
-In **Vercel → Project → Settings → Environment Variables**, add the same keys you use locally in `.env` (must be prefixed with `VITE_` so Vite exposes them to the browser):
-
-| Name | Example |
-|------|---------|
-| `VITE_FIREBASE_API_KEY` | from Firebase console |
-| `VITE_FIREBASE_AUTH_DOMAIN` | `your-app.firebaseapp.com` |
-| `VITE_FIREBASE_PROJECT_ID` | your project id |
-| `VITE_FIREBASE_STORAGE_BUCKET` | `your-app.appspot.com` |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | numeric id |
-| `VITE_FIREBASE_APP_ID` | `1:...:web:...` |
-
-Optional (SEO canonical URLs in production):
-
-| `VITE_SITE_URL` | `https://your-deployment.vercel.app` |
-
-Redeploy after saving variables (**Deployments → Redeploy**).
-
-## 3. SPA routing
-
-`vercel.json` in this folder rewrites all paths to `index.html` so React Router works on refresh.
-
-## 4. Common “blank black page” causes (fixed in code)
-
-1. **`ScrollRestoration` inside `BrowserRouter`** — crashes at runtime. Do not use it unless you migrate to `createBrowserRouter` / `RouterProvider`.
-2. **Missing `VITE_FIREBASE_*` on Vercel** — Firebase `initializeApp` used to throw during import. The app now stays usable and shows a top banner until env is set.
-
-## 5. Build locally
-
-```bash
-cd project
-npm ci
-npm run build
-npm run preview
+```
+VITE_ADMIN_EMAILS=your@gmail.com
 ```
 
-If `npm run build` fails with an **esbuild version** error on Windows, run `npm rebuild esbuild` and try again.
+Comma-separated emails that get **admin** access when signing in with name + email (no password).
+
+## Auth (new)
+
+- **Sign in:** name + email only at `/login` — no password, no Firebase Auth.
+- **Users:** `/dashboard` — all treatments, offers, and my appointments.
+- **Admin:** `/admin` — appointments, treatments, offers, database reset.
+
+## First-time database setup
+
+1. Add `VITE_ADMIN_EMAILS` with your email in Vercel → redeploy.
+2. Sign in at `/login` with that email.
+3. Open **Admin → Database → Reset & seed database** (clears old data, adds 6 treatments + 3 offers).
+
+Or locally: first visit auto-seeds if `treatments` collection is empty.
+
+## Deploy
+
+```bash
+npm run build
+firebase deploy --only hosting,firestore
+```
+
+Or: `npm run deploy`
+
+## Collections
+
+| Collection | Purpose |
+|------------|---------|
+| `users` | name, email, role (`user` \| `admin`) |
+| `treatments` | salon services (admin CRUD) |
+| `offers` | promotions (admin CRUD) |
+| `appointments` | bookings (user create, admin approve) |
+| `gallery` | optional images |
+| `reviews` | optional reviews |
+
+Old `services` collection is replaced by **`treatments`**.
