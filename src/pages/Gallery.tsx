@@ -18,6 +18,10 @@ const Gallery = () => {
 
   useEffect(() => {
     const getImages = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       try {
         const snapshot = await getDocs(collection(db, "gallery"));
         setImages(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as GalleryDoc)));

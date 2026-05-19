@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase"; // fixed import
+import { db } from "../../firebase";
 import { Star } from "lucide-react";
 
 export const ReviewForm = () => {
@@ -12,6 +12,10 @@ export const ReviewForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!db) {
+      alert("Reviews are unavailable until Firebase is configured on this site.");
+      return;
+    }
     setLoading(true);
 
     await addDoc(collection(db, "reviews"), {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { auth } from "../../firebase";
+import { auth, isFirebaseConfigured } from "../../firebase";
 import { checkAdmin } from "../../utils/checkAdmin";
 import { signOut } from "firebase/auth";
 import { Button } from "./button";
@@ -13,7 +13,7 @@ export const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loadingAdmin, setLoadingAdmin] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [user, setUser] = useState(() => auth.currentUser);
+  const [user, setUser] = useState(() => auth?.currentUser ?? null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -22,6 +22,12 @@ export const Navbar = () => {
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
+    if (!auth) {
+      setUser(null);
+      setIsAdmin(false);
+      setLoadingAdmin(false);
+      return;
+    }
     const unsub = auth.onAuthStateChanged(async (current) => {
       setUser(current);
       if (!current) {
@@ -38,6 +44,7 @@ export const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
+    if (!auth) return;
     await signOut(auth);
     navigate("/login");
   };
@@ -82,7 +89,11 @@ export const Navbar = () => {
   );
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-background/70 backdrop-blur-md border-b border-border z-50">
+    <header
+      className={`fixed left-0 w-full bg-background/70 backdrop-blur-md border-b border-border z-50 ${
+        isFirebaseConfigured ? "top-0" : "top-12 sm:top-14"
+      }`}
+    >
       <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 py-3 gap-3">
         <Link to="/" className="flex flex-col leading-tight shrink-0 min-w-0">
           <span className="font-bold text-lg text-foreground truncate">Nirvana Nails</span>

@@ -16,6 +16,10 @@ const Services = () => {
 
   useEffect(() => {
     const getServices = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       try {
         const snapshot = await getDocs(collection(db, "services"));
         const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as ServiceCard));

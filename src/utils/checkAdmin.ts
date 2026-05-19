@@ -6,6 +6,7 @@ import { db } from "../firebase";
  * checkAdmin(uid) -> returns true if user's role === "admin"
  */
 export const checkAdmin = async (uid: string) => {
+  if (!db) return false;
   try {
     const ref = doc(db, "users", uid);
     const snap = await getDoc(ref);

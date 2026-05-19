@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
-import { auth, db } from "../firebase";
+import { auth, db, isFirebaseConfigured } from "../firebase";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { Seo } from "@/components/Seo";
@@ -16,6 +16,8 @@ const Dashboard = () => {
   >([]);
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth || !db) return;
+
     let unsubFirestore: (() => void) | undefined;
 
     const unsubAuth = auth.onAuthStateChanged((u) => {
@@ -42,6 +44,22 @@ const Dashboard = () => {
     };
   }, [navigate]);
 
+  if (!isFirebaseConfigured || !auth || !db) {
+    return (
+      <main className="min-h-screen bg-background text-foreground">
+        <Navbar />
+        <section className="pt-36 sm:pt-40 container mx-auto px-4 max-w-lg text-center">
+          <h1 className="font-display text-2xl font-bold mb-2">Dashboard unavailable</h1>
+          <p className="text-muted-foreground text-sm">
+            Add Firebase <code className="text-gold">VITE_FIREBASE_*</code> environment variables in
+            Vercel, redeploy, then sign in again.
+          </p>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
+
   if (!user) {
     return (
       <main className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
@@ -52,7 +70,12 @@ const Dashboard = () => {
 
   return (
     <main className="min-h-screen bg-background">
-      <Seo title={`My appointments – ${SALON_NAME}`} description="View your booking requests." path="/dashboard" noIndex />
+      <Seo
+        title={`My appointments – ${SALON_NAME}`}
+        description="View your booking requests."
+        path="/dashboard"
+        noIndex
+      />
       <Navbar />
 
       <section className="pt-28 sm:pt-32 pb-12 container mx-auto px-4">

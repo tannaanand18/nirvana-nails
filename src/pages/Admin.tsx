@@ -2,18 +2,18 @@
 import { useEffect, useState } from "react";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
-import { auth } from "../firebase";
+import { auth, isFirebaseConfigured } from "../firebase";
 import { checkAdmin } from "../utils/checkAdmin";
 
-/**
- * Minimal admin shell.
- * You can later paste your full Admin UI (services/gallery) inside the return
- * once the role-check passes.
- */
 const Admin = () => {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if (!isFirebaseConfigured || !auth) {
+      setIsAdmin(false);
+      return;
+    }
+
     const unsub = auth.onAuthStateChanged((user) => {
       if (!user) {
         window.location.href = "/login";
@@ -31,25 +31,40 @@ const Admin = () => {
     return () => unsub();
   }, []);
 
-  if (isAdmin === null) return (
-    <main className="min-h-screen bg-background">
-      <Navbar />
-      <div className="pt-32 container mx-auto px-4">Checking admin access…</div>
-      <Footer />
-    </main>
-  );
+  if (!isFirebaseConfigured || !auth) {
+    return (
+      <main className="min-h-screen bg-background text-foreground">
+        <Navbar />
+        <section className="pt-36 sm:pt-40 container mx-auto px-4 max-w-lg text-center">
+          <h1 className="font-display text-2xl font-bold mb-2">Admin unavailable</h1>
+          <p className="text-muted-foreground text-sm">
+            Configure Firebase <code className="text-gold">VITE_FIREBASE_*</code> in Vercel and redeploy.
+          </p>
+        </section>
+        <Footer />
+      </main>
+    );
+  }
+
+  if (isAdmin === null) {
+    return (
+      <main className="min-h-screen bg-background">
+        <Navbar />
+        <div className="pt-32 container mx-auto px-4">Checking admin access…</div>
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
       <section className="pt-32 pb-8 container mx-auto px-4">
         <h1 className="font-display text-4xl font-bold">Admin Panel</h1>
-        <p className="mt-1 text-muted-foreground text-sm sm:text-base">Manage services & gallery. (Admin only)</p>
+        <p className="mt-1 text-muted-foreground text-sm sm:text-base">
+          Manage services & gallery. (Admin only)
+        </p>
       </section>
-
-      {/* You can paste your full admin forms and lists here.
-          For clarity I leave the UI minimal — but you already have Admin UI (services/gallery).
-          If you want, I can merge your existing Admin components into this protected shell. */}
 
       <Footer />
     </main>

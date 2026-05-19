@@ -42,6 +42,12 @@ const Appointment = () => {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!auth) {
+      setUser(null);
+      setAuthReady(true);
+      setMode("guest");
+      return;
+    }
     const unsub = auth.onAuthStateChanged((u) => {
       setUser(u);
       setAuthReady(true);
@@ -70,7 +76,7 @@ Notes: ${notes || "—"}`;
 
   const submitAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !selectedService || !date || !time) return;
+    if (!user || !db || !selectedService || !date || !time) return;
     setSubmitting(true);
     const form = e.target as HTMLFormElement;
     const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;

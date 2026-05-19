@@ -14,6 +14,10 @@ export const ServicesSection = () => {
 
   useEffect(() => {
     const loadServices = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
+      }
       try {
         const q = query(collection(db, "services"), limit(6));
         const snap = await getDocs(q);

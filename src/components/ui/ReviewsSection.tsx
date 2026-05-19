@@ -6,16 +6,22 @@ export const ReviewsSection = () => {
   const [reviews, setReviews] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      const q = query(
-        collection(db, "reviews"),
-        where("approved", "==", true),       // ⭐ only show approved reviews
-        orderBy("createdAt", "desc")         // newest first
-      );
+    if (!db) return;
 
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((d) => d.data());
-      setReviews(data);
+    const fetchReviews = async () => {
+      try {
+        const q = query(
+          collection(db, "reviews"),
+          where("approved", "==", true),
+          orderBy("createdAt", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map((d) => d.data());
+        setReviews(data);
+      } catch (err) {
+        console.warn("Reviews could not be loaded:", err);
+      }
     };
 
     fetchReviews();

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db, isFirebaseConfigured } from "../firebase";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
 import { Button } from "../components/ui/button";
@@ -17,6 +17,11 @@ const Register = () => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
+
+    if (!auth || !db) {
+      setErrorMsg("Registration is unavailable until Firebase is configured on this server.");
+      return;
+    }
 
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -58,6 +63,11 @@ const Register = () => {
         )}
 
         <form onSubmit={handleRegister} className="space-y-4">
+          {!isFirebaseConfigured && (
+            <p className="text-sm text-amber-200 bg-amber-500/10 border border-amber-500/30 p-3 rounded-md">
+              Add <code className="text-gold">VITE_FIREBASE_*</code> variables in Vercel, then redeploy.
+            </p>
+          )}
           <div>
             <label className="text-sm font-medium">Email</label>
             <input
@@ -82,7 +92,7 @@ const Register = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full" variant="gold">
+          <Button type="submit" className="w-full" variant="gold" disabled={!isFirebaseConfigured}>
             Create Account
           </Button>
         </form>

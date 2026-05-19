@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate, ScrollRestoration } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Services from "./pages/Services";
@@ -12,14 +12,19 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Appointment from "./pages/Appointment";
 import Dashboard from "./pages/Dashboard";
-import { auth } from "./firebase";
+import { auth, isFirebaseConfigured } from "./firebase";
 import { checkAdmin } from "./utils/checkAdmin";
+import { FirebaseDisabledBanner } from "./components/FirebaseDisabledBanner";
 
 /** RequireAdmin component */
 const RequireAdmin = ({ children }: { children: JSX.Element }) => {
   const [status, setStatus] = useState<"loading" | "ok" | "no">("loading");
 
   useEffect(() => {
+    if (!auth) {
+      setStatus("no");
+      return;
+    }
     const unsub = auth.onAuthStateChanged(async (user) => {
       if (!user) {
         setStatus("no");
@@ -31,6 +36,10 @@ const RequireAdmin = ({ children }: { children: JSX.Element }) => {
     return () => unsub();
   }, []);
 
+  if (!isFirebaseConfigured) {
+    return <Navigate to="/" replace />;
+  }
+
   if (status === "loading") return <div>Checking access…</div>;
   if (status === "no") return <Navigate to="/" replace />;
   return children;
@@ -39,7 +48,7 @@ const RequireAdmin = ({ children }: { children: JSX.Element }) => {
 const App = () => {
   return (
     <BrowserRouter>
-      <ScrollRestoration />
+      <FirebaseDisabledBanner />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/gallery" element={<Gallery />} />

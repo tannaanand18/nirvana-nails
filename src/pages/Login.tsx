@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, isFirebaseConfigured } from "../firebase";
 import { Navbar } from "../components/ui/Navbar";
 import { Footer } from "../components/ui/Footer";
 import { Button } from "../components/ui/button";
@@ -19,6 +19,12 @@ const Login = () => {
     setLoading(true);
     setErrorMsg("");
     setSuccessMsg("");
+
+    if (!auth) {
+      setErrorMsg("Sign-in is unavailable: Firebase is not configured for this deployment.");
+      setLoading(false);
+      return;
+    }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -55,6 +61,12 @@ const Login = () => {
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
+          {!isFirebaseConfigured && (
+            <p className="text-sm text-amber-200 bg-amber-500/10 border border-amber-500/30 p-3 rounded-md">
+              Firebase environment variables are missing on this host. Add{" "}
+              <code className="text-gold">VITE_FIREBASE_*</code> in Vercel and redeploy.
+            </p>
+          )}
           <div>
             <label className="text-sm font-medium">Email</label>
             <input
@@ -92,7 +104,7 @@ const Login = () => {
             type="submit"
             className="w-full"
             variant="gold"
-            disabled={loading}
+            disabled={loading || !isFirebaseConfigured}
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
