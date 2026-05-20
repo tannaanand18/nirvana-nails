@@ -10,6 +10,8 @@ interface ImportMetaEnv {
   readonly VITE_FIREBASE_MEASUREMENT_ID: string;
   /** Comma-separated admin emails, e.g. owner@gmail.com,admin@nirvananails.com */
   readonly VITE_ADMIN_EMAILS?: string;
+  /** Password required for admin sign-in */
+  readonly VITE_ADMIN_PASSWORD?: string;
   /** Canonical site URL for SEO (no trailing slash) */
   readonly VITE_SITE_URL?: string;
   readonly VITE_EMAILJS_SERVICE_ID?: string;

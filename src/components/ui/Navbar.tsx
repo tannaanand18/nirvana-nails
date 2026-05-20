@@ -40,6 +40,9 @@ export const Navbar = () => {
       <NavLink to="/services" className={navLinkClass}>
         Treatments
       </NavLink>
+      <NavLink to="/learn-nail-art" className={navLinkClass}>
+        Learn
+      </NavLink>
       <NavLink to="/gallery" className={navLinkClass}>
         Gallery
       </NavLink>
@@ -123,6 +126,9 @@ export const Navbar = () => {
             </NavLink>
             <NavLink to="/services" className={navLinkClass} onClick={() => setMobileOpen(false)}>
               Treatments
+            </NavLink>
+            <NavLink to="/learn-nail-art" className={navLinkClass} onClick={() => setMobileOpen(false)}>
+              Learn
             </NavLink>
             <NavLink to="/gallery" className={navLinkClass} onClick={() => setMobileOpen(false)}>
               Gallery

@@ -63,6 +63,13 @@ export const HeroSection = () => {
                 View gallery
               </Button>
             </Link>
+
+            <Link to="/learn-nail-art">
+              <Button variant="glass" size="lg" className="inline-flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                <span>Learn nail art</span>
+              </Button>
+            </Link>
           </div>
 
           <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground">

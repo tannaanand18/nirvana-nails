@@ -2,6 +2,7 @@ import { Navigate, Route, Routes, BrowserRouter } from "react-router-dom";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import Services from "./pages/Services";
+import LearnNailArt from "./pages/LearnNailArt";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -35,6 +36,7 @@ const AppRoutes = () => (
       <Route path="/" element={<Index />} />
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/services" element={<Services />} />
+      <Route path="/learn-nail-art" element={<LearnNailArt />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/appointment" element={<Appointment />} />
       <Route path="/login" element={<Login />} />
