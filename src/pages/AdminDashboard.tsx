@@ -105,7 +105,51 @@ function AppointmentsTab() {
   const setStatus = async (id: string, status: Appointment["status"]) => {
     if (!db) return;
     await updateDoc(doc(db, COLLECTIONS.appointments, id), { status });
+    // If appointment approved, attempt to send a confirmation email to the user
+    if (status === "Approved") {
+      try {
+        const snap = await (await import("firebase/firestore")).getDoc(doc(db, COLLECTIONS.appointments, id));
+        if (snap.exists()) {
+          const data = snap.data() as Appointment;
+          await sendApprovalEmail(data.userName, data.userEmail, data.treatmentName, data.date, data.time);
+        }
+      } catch (e) {
+        // non-fatal: email failure should not block UI
+        console.error("Failed to send approval email", e);
+      }
+    }
   };
+
+  async function sendApprovalEmail(name: string, email: string, service = "", date = "", time = "") {
+    const serviceId = (import.meta.env.VITE_EMAILJS_SERVICE_ID as string | undefined) ?? "";
+    const templateId = (import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string | undefined) ?? "";
+    const userId = (import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string | undefined) ?? "";
+    if (!serviceId || !templateId || !userId) {
+      console.warn("EmailJS not configured; skipping approval email.");
+      return;
+    }
+
+    const location = "Dwarkadhish Heights, D-101, Rajkot";
+    const phone = "9512267420";
+    const message = `Hi ${name},\n\nYour appointment for ${service || "your service"} on ${date} at ${time} has been approved.\n\nLocation: ${location}\nPhone: ${phone}\n\nSee you soon!`;
+
+    await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: userId,
+        template_params: {
+          to_name: name,
+          to_email: email,
+          message,
+          location,
+          phone,
+        },
+      }),
+    });
+  }
 
   const remove = async (id: string) => {
     if (!db || !confirm("Delete this appointment?")) return;

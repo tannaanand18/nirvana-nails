@@ -66,6 +66,22 @@ const DEFAULT_TREATMENTS: Omit<Treatment, "id">[] = [
     active: true,
     sortOrder: 6,
   },
+  {
+    name: "Learn Gel polish with Basic arts",
+    description: `Learn Gel polish with basic nail arts in just three days.\nPer day: 1 hour.\nTopics include basic gel application and simple decorative arts. Book your slot now!`,
+    price: "₹999",
+    duration: "3 days (1 hr/day)",
+    active: true,
+    sortOrder: 7,
+  },
+  {
+    name: "Basic nail art Course",
+    description: `- Nail anatomy\n- Nail preparation/dry manicure\n- How to apply gel polish\n- How to remove gel polish\n\nArts:\n- French art\n- Ombre art\n- Glitter art\n- Polka dots\n- Striped/ line art\n- Floral art\n- Sticker Art\n- Marble art\n- Chrome art\n- Bow art\n- Heart nail art\n- Swirl art\n- Cat eye polish\n\nOnly at just rs.2500/-\n5 days course (daily 1 hour)`,
+    price: "₹2500",
+    duration: "5 days (1 hr/day)",
+    active: true,
+    sortOrder: 8,
+  },
 ];
 
 const DEFAULT_OFFERS: Omit<Offer, "id">[] = [

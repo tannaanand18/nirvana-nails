@@ -15,6 +15,7 @@ const inputClass =
 const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -34,7 +35,7 @@ const Login = () => {
     }
 
     try {
-      const user = await login(name, email);
+      const user = await login(name, email, password);
       navigate(user.role === "admin" ? "/admin" : from, { replace: true });
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Could not sign in. Try again.");
@@ -54,8 +55,8 @@ const Login = () => {
 
       <section className="pt-28 sm:pt-32 pb-12 container mx-auto px-4 max-w-md">
         <h1 className="font-display text-3xl font-bold mb-2 text-center">Welcome back</h1>
-        <p className="text-center text-sm text-muted-foreground mb-8">
-          Just your name and email — no password to remember.
+          <p className="text-center text-sm text-muted-foreground mb-8">
+          Just your name and email — admins must enter a password.
         </p>
 
         {errorMsg && (
@@ -93,6 +94,16 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@email.com"
               autoComplete="email"
+            />
+          </FormField>
+          <FormField label="Admin password (if admin)">
+            <input
+              className={inputClass}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Admin password"
+              autoComplete="current-password"
             />
           </FormField>
           <Button

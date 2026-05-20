@@ -18,7 +18,7 @@ const STORAGE_KEY = "nirvana_user";
 type AuthContextValue = {
   user: AppUser | null;
   loading: boolean;
-  login: (name: string, email: string) => Promise<AppUser>;
+  login: (name: string, email: string, password?: string) => Promise<AppUser>;
   logout: () => void;
   isAdmin: boolean;
 };
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void sync();
   }, []);
 
-  const login = useCallback(async (name: string, email: string) => {
+  const login = useCallback(async (name: string, email: string, password?: string) => {
     if (!db || !isFirebaseConfigured) {
       throw new Error("Firebase is not configured.");
     }
@@ -83,7 +83,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const id = emailToUserId(normalized);
-    const role = isAdminEmail(normalized) ? "admin" : "user";
+    let role: AppUser["role"] = "user";
+    if (isAdminEmail(normalized)) {
+      const adminPassword = (import.meta.env.VITE_ADMIN_PASSWORD as string | undefined) ?? "";
+      if (!adminPassword) {
+        throw new Error("Admin password not configured. Contact site owner.");
+      }
+      if (password !== adminPassword) {
+        throw new Error("Invalid admin password.");
+      }
+      role = "admin";
+    }
     const appUser: AppUser = {
       id,
       name: trimmedName,
